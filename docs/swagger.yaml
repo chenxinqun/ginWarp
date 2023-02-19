@@ -1,0 +1,282 @@
+basePath: /api/ginWarp-example/
+definitions:
+  ginWarpExampleApi.UserCreateRequest:
+    properties:
+      account:
+        description: 用户账号
+        maxLength: 24
+        minLength: 4
+        type: string
+      pwd:
+        description: 用户密码
+        maxLength: 16
+        minLength: 8
+        type: string
+    required:
+    - account
+    - pwd
+    type: object
+  ginWarpExampleApi.UserCreateResponse:
+    properties:
+      account:
+        description: 用户账号
+        type: string
+      id:
+        description: 用户ID int64的字段, 统一在json tag中增加 string标识, 避免前端接收数据失真的问题.
+        example: "0"
+        type: string
+    type: object
+  ginWarpExampleApi.UserDeleteResponse:
+    properties:
+      delete_user:
+        description: 如果成功则返回被删除的用户ID, 如果失败则为0
+        example: "0"
+        type: string
+    type: object
+  ginWarpExampleApi.UserDetailResponse:
+    properties:
+      account:
+        description: 用户账号
+        type: string
+      created_at:
+        description: 用户创建时间
+        type: string
+      id:
+        description: 用户ID int64的字段, 统一在json tag中增加 string标识, 避免前端接收数据失真的问题.
+        example: "0"
+        type: string
+      login_ip:
+        description: 用户登陆IP
+        type: string
+      login_time:
+        description: 用户登陆时间
+        type: string
+    type: object
+  ginWarpExampleApi.UserUpdatePasswordRequest:
+    properties:
+      account:
+        description: 用户账号
+        type: string
+      new_pwd:
+        description: 用户新密码
+        type: string
+      pwd:
+        description: 用户密码
+        type: string
+    type: object
+  ginWarpExampleApi.UserUpdatePasswordResponse:
+    properties:
+      set_password:
+        description: 设置密码是否成功
+        type: boolean
+    type: object
+  userHandler.swaggerCreateFailure:
+    properties:
+      code:
+        description: 业务码
+        type: integer
+      msg:
+        description: 描述信息
+        type: string
+    type: object
+  userHandler.swaggerCreateSuccess:
+    properties:
+      code:
+        description: 业务码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/ginWarpExampleApi.UserCreateResponse'
+        description: 返回值
+      msg:
+        description: 描述信息
+        type: string
+    type: object
+  userHandler.swaggerDeleteFailure:
+    properties:
+      code:
+        description: 业务码
+        type: integer
+      msg:
+        description: 描述信息
+        type: string
+    type: object
+  userHandler.swaggerDeleteSuccess:
+    properties:
+      code:
+        description: 业务码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/ginWarpExampleApi.UserDeleteResponse'
+        description: 返回值
+      msg:
+        description: 描述信息
+        type: string
+    type: object
+  userHandler.swaggerDetailFailure:
+    properties:
+      code:
+        description: 业务码
+        type: integer
+      msg:
+        description: 描述信息
+        type: string
+    type: object
+  userHandler.swaggerDetailSuccess:
+    properties:
+      code:
+        description: 业务码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/ginWarpExampleApi.UserDetailResponse'
+        description: 返回值
+      msg:
+        description: 描述信息
+        type: string
+    type: object
+  userHandler.swaggerUpdatePasswordFailure:
+    properties:
+      code:
+        description: 业务码
+        type: integer
+      msg:
+        description: 描述信息
+        type: string
+    type: object
+  userHandler.swaggerUpdatePasswordSuccess:
+    properties:
+      code:
+        description: 业务码
+        type: integer
+      data:
+        allOf:
+        - $ref: '#/definitions/ginWarpExampleApi.UserUpdatePasswordResponse'
+        description: 返回值
+      msg:
+        description: 描述信息
+        type: string
+    type: object
+info:
+  contact: {}
+  title: ginWarp-example 接口文档
+  version: v1
+paths:
+  /v1/user/create:
+    post:
+      consumes:
+      - application/json
+      description: 创建用户
+      parameters:
+      - description: 请求信息
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/ginWarpExampleApi.UserCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/userHandler.swaggerCreateSuccess'
+        "202":
+          description: Accepted
+          schema:
+            $ref: '#/definitions/userHandler.swaggerCreateFailure'
+      summary: 创建用户
+      tags:
+      - user
+  /v1/user/delete:
+    delete:
+      consumes:
+      - application/json
+      description: 删除用户
+      parameters:
+      - description: 用户账号
+        in: query
+        maxLength: 24
+        minLength: 4
+        name: account
+        required: true
+        type: string
+      - description: 用户ID int64的字段, 统一在json tag中增加 string标识, 避免前端接收数据失真的问题.
+        example: "0"
+        in: query
+        name: id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/userHandler.swaggerDeleteSuccess'
+        "202":
+          description: Accepted
+          schema:
+            $ref: '#/definitions/userHandler.swaggerDeleteFailure'
+      summary: 删除用户
+      tags:
+      - user
+  /v1/user/detail:
+    get:
+      consumes:
+      - application/json
+      description: 用户详情
+      parameters:
+      - description: 用户账号
+        in: query
+        maxLength: 24
+        minLength: 4
+        name: account
+        required: true
+        type: string
+      - description: 用户ID int64的字段, 统一在json tag中增加 string标识, 避免前端接收数据失真的问题.
+        example: "0"
+        in: query
+        name: id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/userHandler.swaggerDetailSuccess'
+        "202":
+          description: Accepted
+          schema:
+            $ref: '#/definitions/userHandler.swaggerDetailFailure'
+      summary: 用户详情
+      tags:
+      - user
+  /v1/user/updatePassword:
+    put:
+      consumes:
+      - application/json
+      description: 修改用户密码
+      parameters:
+      - description: 请求信息
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/ginWarpExampleApi.UserUpdatePasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/userHandler.swaggerUpdatePasswordSuccess'
+        "202":
+          description: Accepted
+          schema:
+            $ref: '#/definitions/userHandler.swaggerUpdatePasswordFailure'
+      summary: 修改用户密码
+      tags:
+      - user
+swagger: "2.0"
